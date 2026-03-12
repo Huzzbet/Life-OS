@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>LifeOS</title>
+<style>
+body{
+font-family: Arial;
+background:#0b1220;
+color:white;
+text-align:center;
+padding:40px;
+}
+
+.card{
+background:#111a2e;
+padding:30px;
+border-radius:12px;
+width:400px;
+margin:auto;
+}
+
+button{
+padding:10px 20px;
+background:#2bd47d;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>LifeOS</h1>
+
+<div class="card">
+
+<h2>Future Simulation</h2>
+
+<p>Enter your yearly savings</p>
+
+<input id="savings" type="number" placeholder="Savings per year">
+
+<br><br>
+
+<button onclick="simulate()">Run Simulation</button>
+
+<p id="result"></p>
+
+</div>
+
+<script>
+
+function simulate(){
+
+let savings = document.getElementById("savings").value;
+
+let future = savings * 20;
+
+document.getElementById("result").innerText =
+"Estimated wealth in 20 years: $" + future;
+
+}
+
+</script>
+
+</body>
+</html>
