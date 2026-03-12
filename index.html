@@ -1,72 +1,176 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>LifeOS</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LifeOS Future Simulator</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
+
 body{
-font-family: Arial;
-background:#0b1220;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+background:linear-gradient(180deg,#0b1220,#020617);
 color:white;
-text-align:center;
-padding:40px;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
 }
 
 .card{
 background:#111a2e;
-padding:30px;
-border-radius:12px;
-width:400px;
-margin:auto;
+padding:40px;
+border-radius:20px;
+width:420px;
+box-shadow:0 20px 50px rgba(0,0,0,.6);
+text-align:center;
+}
+
+h1{
+margin-bottom:20px;
+font-size:32px;
+}
+
+input{
+width:100%;
+padding:12px;
+border-radius:8px;
+border:none;
+margin-top:8px;
+margin-bottom:20px;
+font-size:16px;
 }
 
 button{
-padding:10px 20px;
 background:#2bd47d;
 border:none;
-border-radius:8px;
-font-size:16px;
+padding:14px;
+width:100%;
+border-radius:10px;
+font-size:18px;
+font-weight:600;
 cursor:pointer;
+transition:.2s;
 }
+
+button:hover{
+background:#22b86c;
+}
+
+#result{
+margin-top:20px;
+font-size:20px;
+font-weight:600;
+}
+
+canvas{
+margin-top:30px;
+}
+
+label{
+font-size:14px;
+color:#9fb0d0;
+}
+
 </style>
 </head>
 
 <body>
 
-<h1>LifeOS</h1>
-
 <div class="card">
 
-<h2>Future Simulation</h2>
+<h1>Future Simulation</h1>
 
-<p>Enter your yearly savings</p>
+<label>Yearly Savings ($)</label>
+<input id="savings" type="number" value="2000">
 
-<input id="savings" type="number" placeholder="Savings per year">
+<label>Investment Return (%)</label>
+<input id="rate" type="number" value="7">
 
-<br><br>
+<label>Years Investing</label>
+<input id="years" type="number" value="20">
 
 <button onclick="simulate()">Run Simulation</button>
 
 <p id="result"></p>
 
+<canvas id="chart"></canvas>
+
 </div>
 
 <script>
 
+let chart;
+
 function simulate(){
 
-let yearly = document.getElementById("savings").value;
-
-let rate = 0.07;
-let years = 20;
+let yearly = Number(document.getElementById("savings").value);
+let rate = Number(document.getElementById("rate").value)/100;
+let years = Number(document.getElementById("years").value);
 
 let total = 0;
+let data=[];
+let labels=[];
 
-for(let i=0;i<years;i++){
-total = (total + Number(yearly)) * (1 + rate);
+for(let i=1;i<=years;i++){
+
+total = (total + yearly) * (1 + rate);
+
+data.push(Math.round(total));
+labels.push("Year "+i);
+
 }
 
 document.getElementById("result").innerText =
-"Estimated wealth in 20 years: $" + Math.round(total);
+"Estimated wealth: $" + Math.round(total).toLocaleString();
+
+if(chart){
+chart.destroy();
+}
+
+const ctx = document.getElementById("chart");
+
+chart = new Chart(ctx, {
+
+type:'line',
+
+data:{
+labels:labels,
+
+datasets:[{
+label:'Projected Wealth',
+data:data,
+borderColor:'#2bd47d',
+backgroundColor:'rgba(43,212,125,.2)',
+fill:true,
+tension:.3
+}]
+
+},
+
+options:{
+plugins:{
+legend:{
+labels:{
+color:"white"
+}
+}
+},
+scales:{
+x:{
+ticks:{color:"#9fb0d0"}
+},
+y:{
+ticks:{color:"#9fb0d0"}
+}
+}
+}
+
+});
 
 }
 
