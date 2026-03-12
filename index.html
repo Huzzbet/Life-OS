@@ -54,12 +54,19 @@ cursor:pointer;
 
 function simulate(){
 
-let savings = document.getElementById("savings").value;
+let yearly = document.getElementById("savings").value;
 
-let future = savings * 20;
+let rate = 0.07;
+let years = 20;
+
+let total = 0;
+
+for(let i=0;i<years;i++){
+total = (total + Number(yearly)) * (1 + rate);
+}
 
 document.getElementById("result").innerText =
-"Estimated wealth in 20 years: $" + future;
+"Estimated wealth in 20 years: $" + Math.round(total);
 
 }
 
