@@ -8,7 +8,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-
 :root{
 --bg:#050816;
 --bg2:#0b1220;
@@ -20,8 +19,6 @@
 
 --green:#2bd47d;
 --blue:#54a6ff;
---amber:#ffd166;
---red:#ff6b81;
 --purple:#9d7cff;
 --cyan:#53e0ff;
 
@@ -43,7 +40,7 @@ linear-gradient(180deg,var(--bg2),var(--bg));
 }
 
 .app{
-max-width:1400px;
+max-width:1300px;
 margin:auto;
 padding:28px;
 }
@@ -51,26 +48,23 @@ padding:28px;
 .hero{
 display:flex;
 justify-content:space-between;
-margin-bottom:22px;
 flex-wrap:wrap;
+margin-bottom:22px;
 }
 
-.hero h1{
-font-size:38px;
-margin:0;
-}
+.hero h1{margin:0;font-size:38px}
 
 .hero p{
 color:var(--muted);
-margin-top:8px;
-max-width:700px;
+margin-top:6px;
+max-width:600px;
 }
 
 .hero-badge{
 background:linear-gradient(135deg, rgba(83,224,255,.18), rgba(157,124,255,.18));
 border:1px solid var(--line);
 border-radius:18px;
-padding:16px;
+padding:18px;
 min-width:220px;
 }
 
@@ -91,8 +85,8 @@ font-size:13px;
 }
 
 .hero-badge .trajectory{
-margin-top:6px;
 font-size:12px;
+margin-top:6px;
 color:var(--muted);
 }
 
@@ -102,10 +96,7 @@ grid-template-columns:1fr 1fr;
 gap:22px;
 }
 
-.stack{
-display:grid;
-gap:22px;
-}
+.stack{display:grid;gap:22px}
 
 .card{
 background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
@@ -114,14 +105,12 @@ border-radius:var(--radius);
 box-shadow:var(--shadow);
 }
 
-.card-inner{
-padding:22px;
-}
+.card-inner{padding:22px}
 
 .card-title{
 display:flex;
 justify-content:space-between;
-margin-bottom:16px;
+margin-bottom:14px;
 }
 
 .card-title span{
@@ -149,7 +138,7 @@ text-transform:uppercase;
 }
 
 .domain-score{
-font-size:28px;
+font-size:26px;
 font-weight:800;
 }
 
@@ -158,6 +147,7 @@ height:10px;
 background:rgba(255,255,255,.06);
 border-radius:999px;
 overflow:hidden;
+margin-top:6px;
 }
 
 .bar-fill{
@@ -171,17 +161,19 @@ grid-template-columns:repeat(2,1fr);
 gap:14px;
 }
 
-.field{
-display:flex;
-flex-direction:column;
-gap:6px;
+.field{display:flex;flex-direction:column}
+
+.field label{
+font-size:12px;
+color:var(--muted);
+margin-bottom:4px;
 }
 
 .field input{
 background:#091120;
 border:1px solid var(--line);
 border-radius:12px;
-padding:12px;
+padding:10px;
 color:var(--text);
 }
 
@@ -192,9 +184,6 @@ padding:12px 16px;
 cursor:pointer;
 font-weight:700;
 margin-top:10px;
-}
-
-.primary{
 background:linear-gradient(135deg,var(--green),#24b86c);
 }
 
@@ -218,14 +207,8 @@ color:var(--muted);
 }
 
 .mini-stat .v{
-font-size:24px;
+font-size:22px;
 font-weight:800;
-}
-
-.coach-box{
-background:linear-gradient(180deg,#0d1728,#0a1221);
-border-radius:20px;
-padding:18px;
 }
 
 .timeline-item{
@@ -236,8 +219,16 @@ border:1px solid var(--line);
 margin-bottom:8px;
 }
 
-canvas{
-max-height:340px;
+canvas{max-height:320px}
+
+select{
+background:#091120;
+border:1px solid var(--line);
+border-radius:12px;
+padding:10px;
+color:var(--text);
+margin-top:8px;
+width:100%;
 }
 
 </style>
@@ -251,12 +242,12 @@ max-height:340px;
 
 <div>
 <h1>🌌 LifeOS</h1>
-<p>A personal life operating system that models your habits and future trajectory.</p>
+<p>A personal life operating system that models your habits, decisions, and future trajectory.</p>
 </div>
 
 <div class="hero-badge">
 <div class="label">Life Health Score</div>
-<div class="score" id="lifeScore">71</div>
+<div class="score" id="lifeScore">0</div>
 <div class="sub">Stable with upside</div>
 <div class="trajectory" id="trajectory">Trajectory: Stable</div>
 </div>
@@ -291,27 +282,27 @@ max-height:340px;
 
 <div class="field">
 <label>Net Worth</label>
-<input id="startWealth" type="number" value="25000"/>
+<input id="startWealth" type="number" value="25000">
 </div>
 
 <div class="field">
 <label>Annual Savings</label>
-<input id="annualSavings" type="number" value="12000"/>
+<input id="annualSavings" type="number" value="12000">
 </div>
 
 <div class="field">
 <label>Return %</label>
-<input id="returnRate" type="number" value="7"/>
+<input id="returnRate" type="number" value="7">
 </div>
 
 <div class="field">
 <label>Inflation %</label>
-<input id="inflationRate" type="number" value="2.5"/>
+<input id="inflationRate" type="number" value="2.5">
 </div>
 
 </div>
 
-<button class="primary" id="runBtn">Run Simulation</button>
+<button onclick="simulateLife()">Run Simulation</button>
 
 <div class="result-row">
 
@@ -337,6 +328,26 @@ max-height:340px;
 </div>
 </section>
 
+<section class="card">
+<div class="card-inner">
+
+<h2>Life Decision Simulator</h2>
+
+<select id="lifeDecision">
+<option value="none">Choose decision</option>
+<option value="startup">Start a business</option>
+<option value="workLess">Work fewer hours</option>
+<option value="investMore">Increase investing</option>
+<option value="healthFocus">Focus on health</option>
+</select>
+
+<button onclick="runDecision()">Simulate Decision</button>
+
+<div id="decisionResult" style="margin-top:12px;color:var(--muted)"></div>
+
+</div>
+</section>
+
 </div>
 
 <div class="stack">
@@ -344,13 +355,21 @@ max-height:340px;
 <section class="card">
 <div class="card-inner">
 
-<h2>AI Life Coach</h2>
+<h2>Weekly Review</h2>
 
-<div class="coach-box">
-<p id="coachMessage">
-Focus on improving your health system to maintain long-term momentum.
-</p>
+<button onclick="runWeeklyReview()">Generate Review</button>
+
+<div id="weeklyReview" style="margin-top:12px;color:var(--muted)"></div>
+
 </div>
+</section>
+
+<section class="card">
+<div class="card-inner">
+
+<h2>Message From Your Future Self</h2>
+
+<div id="futureSelf" style="color:var(--muted)"></div>
 
 </div>
 </section>
@@ -390,9 +409,7 @@ const grid=document.getElementById("domainGrid")
 grid.innerHTML=""
 
 domains.forEach(d=>{
-
 const el=document.createElement("div")
-
 el.className="domain"
 
 el.innerHTML=`
@@ -402,7 +419,6 @@ el.innerHTML=`
 `
 
 grid.appendChild(el)
-
 })
 
 updateLifeScore()
@@ -448,23 +464,13 @@ type:"radar",
 data:{
 labels:domains.map(d=>d.name),
 datasets:[{
-label:"Life Balance",
 data:domains.map(d=>d.score),
 backgroundColor:"rgba(84,166,255,.18)",
 borderColor:"#54a6ff",
 borderWidth:2
 }]
 },
-options:{
-plugins:{legend:{display:false}},
-scales:{
-r:{
-min:0,
-max:100,
-ticks:{display:false}
-}
-}
-}
+options:{plugins:{legend:{display:false}}}
 })
 
 }
@@ -484,12 +490,9 @@ const labels=[]
 const data=[]
 
 for(let i=1;i<=20;i++){
-
 total=(total+annual)*(1+realRate)
-
 labels.push("Year "+i)
 data.push(total)
-
 }
 
 document.getElementById("projectedWealth").textContent="$"+Math.round(total).toLocaleString()
@@ -498,6 +501,7 @@ document.getElementById("retirementReadiness").textContent=total>1000000?"Strong
 
 renderTimeline(start,annual,realRate)
 renderChart(labels,data)
+generateFutureMessage(total)
 
 }
 
@@ -519,16 +523,10 @@ backgroundColor:"rgba(43,212,125,.15)",
 borderWidth:3,
 fill:true,
 tension:.35,
-pointRadius:3
+pointRadius:2
 }]
 },
-options:{
-plugins:{legend:{display:false}},
-scales:{
-x:{grid:{color:"rgba(255,255,255,.05)"}},
-y:{grid:{color:"rgba(255,255,255,.05)"}}
-}
-}
+options:{plugins:{legend:{display:false}}}
 })
 
 }
@@ -556,10 +554,85 @@ wrap.appendChild(el)
 
 }
 
+function runDecision(){
+
+const decision=document.getElementById("lifeDecision").value
+
+let message=""
+
+if(decision==="startup"){
+domains[0].score-=5
+domains[1].score+=10
+domains[4].score-=6
+message="Starting a business increases career upside but creates time pressure."
+}
+
+if(decision==="workLess"){
+domains[4].score+=10
+domains[5].score+=6
+domains[0].score-=5
+message="Reducing work increases freedom but slows wealth."
+}
+
+if(decision==="investMore"){
+domains[0].score+=8
+message="Increasing investment accelerates financial freedom."
+}
+
+if(decision==="healthFocus"){
+domains[2].score+=10
+domains[5].score+=6
+message="Health investment compounds long-term energy."
+}
+
+document.getElementById("decisionResult").innerText=message
+
+renderDomains()
+
+}
+
+function runWeeklyReview(){
+
+const wealth=domains[0].score
+const health=domains[2].score
+const time=domains[4].score
+
+let msg=""
+
+if(wealth>health){
+msg="Your financial system is outperforming your health system. Protect energy."
+}
+else if(time<60){
+msg="Time pressure is rising. Consider reclaiming personal time."
+}
+else{
+msg="Your life systems are balanced this week."
+}
+
+document.getElementById("weeklyReview").innerText=msg
+
+}
+
+function generateFutureMessage(total){
+
+let msg=""
+
+if(total>1000000){
+msg="Thank you for staying consistent. Your earlier discipline created freedom."
+}
+else if(total>500000){
+msg="Your discipline built a strong financial foundation."
+}
+else{
+msg="Your future depends on the habits you build today."
+}
+
+document.getElementById("futureSelf").innerText=msg
+
+}
+
 renderDomains()
 simulateLife()
-
-document.getElementById("runBtn").addEventListener("click",simulateLife)
 
 </script>
 
