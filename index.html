@@ -177,8 +177,7 @@ flex-direction:column;
 gap:6px;
 }
 
-.field input,
-.field select{
+.field input{
 background:#091120;
 border:1px solid var(--line);
 border-radius:12px;
@@ -192,16 +191,11 @@ border-radius:12px;
 padding:12px 16px;
 cursor:pointer;
 font-weight:700;
+margin-top:10px;
 }
 
 .primary{
 background:linear-gradient(135deg,var(--green),#24b86c);
-}
-
-.ghost{
-background:#131f36;
-border:1px solid var(--line);
-color:white;
 }
 
 .result-row{
@@ -234,12 +228,6 @@ border-radius:20px;
 padding:18px;
 }
 
-.habit{
-display:flex;
-gap:10px;
-margin-bottom:10px;
-}
-
 .timeline-item{
 background:var(--card2);
 border-radius:14px;
@@ -267,12 +255,10 @@ max-height:340px;
 </div>
 
 <div class="hero-badge">
-
 <div class="label">Life Health Score</div>
-<div class="score" id="lifeScore">78</div>
-<div class="sub" id="lifeScoreSub">Stable with upside</div>
+<div class="score" id="lifeScore">71</div>
+<div class="sub">Stable with upside</div>
 <div class="trajectory" id="trajectory">Trajectory: Stable</div>
-
 </div>
 
 </div>
@@ -299,9 +285,7 @@ max-height:340px;
 <section class="card">
 <div class="card-inner">
 
-<div class="card-title">
 <h2>Future Simulator</h2>
-</div>
 
 <div class="controls">
 
@@ -343,7 +327,7 @@ max-height:340px;
 
 <div class="mini-stat">
 <div class="k">Retirement Readiness</div>
-<div class="v" id="retirementReadiness">Low</div>
+<div class="v" id="retirementReadiness">Building</div>
 </div>
 
 </div>
@@ -360,28 +344,12 @@ max-height:340px;
 <section class="card">
 <div class="card-inner">
 
-<div class="card-title">
-<h2>Daily Inputs</h2>
-</div>
-
-<div id="habitList"></div>
-
-</div>
-</section>
-
-<section class="card">
-<div class="card-inner">
-
-<div class="card-title">
 <h2>AI Life Coach</h2>
-</div>
 
 <div class="coach-box">
-
 <p id="coachMessage">
 Focus on improving your health system to maintain long-term momentum.
 </p>
-
 </div>
 
 </div>
@@ -390,9 +358,7 @@ Focus on improving your health system to maintain long-term momentum.
 <section class="card">
 <div class="card-inner">
 
-<div class="card-title">
 <h2>Future Timeline</h2>
-</div>
 
 <div id="timeline"></div>
 
@@ -406,21 +372,13 @@ Focus on improving your health system to maintain long-term momentum.
 
 <script>
 
-const domains = [
+const domains=[
 {name:"Wealth",score:82},
 {name:"Career",score:74},
 {name:"Health",score:61},
 {name:"Relationships",score:79},
 {name:"Time",score:58},
 {name:"Happiness",score:72}
-]
-
-const habits = [
-{name:"Exercise",impact:2},
-{name:"Deep Work",impact:2},
-{name:"Learning",impact:1},
-{name:"Social",impact:1},
-{name:"Sleep",impact:2}
 ]
 
 let radarChart
@@ -490,9 +448,11 @@ type:"radar",
 data:{
 labels:domains.map(d=>d.name),
 datasets:[{
+label:"Life Balance",
 data:domains.map(d=>d.score),
 backgroundColor:"rgba(84,166,255,.18)",
-borderColor:"#54a6ff"
+borderColor:"#54a6ff",
+borderWidth:2
 }]
 },
 options:{
@@ -509,51 +469,11 @@ ticks:{display:false}
 
 }
 
-function renderHabits(){
-
-const wrap=document.getElementById("habitList")
-
-habits.forEach(h=>{
-
-const row=document.createElement("div")
-
-row.className="habit"
-
-row.innerHTML=`
-<input type="checkbox"/>
-${h.name}
-`
-
-row.querySelector("input").addEventListener("change",e=>{
-
-if(e.target.checked){
-
-domains.forEach(d=>d.score=Math.min(100,d.score+1))
-
-}else{
-
-domains.forEach(d=>d.score=Math.max(0,d.score-1))
-
-}
-
-renderDomains()
-
-})
-
-wrap.appendChild(row)
-
-})
-
-}
-
 function simulateLife(){
 
 const start=Number(document.getElementById("startWealth").value)
-
 const annual=Number(document.getElementById("annualSavings").value)
-
 const rate=Number(document.getElementById("returnRate").value)/100
-
 const inflation=Number(document.getElementById("inflationRate").value)/100
 
 const realRate=((1+rate)/(1+inflation))-1
@@ -568,19 +488,15 @@ for(let i=1;i<=20;i++){
 total=(total+annual)*(1+realRate)
 
 labels.push("Year "+i)
-
 data.push(total)
 
 }
 
 document.getElementById("projectedWealth").textContent="$"+Math.round(total).toLocaleString()
-
 document.getElementById("freedomScore").textContent=Math.round(total/1500000*100)
-
 document.getElementById("retirementReadiness").textContent=total>1000000?"Strong":"Building"
 
 renderTimeline(start,annual,realRate)
-
 renderChart(labels,data)
 
 }
@@ -596,10 +512,22 @@ type:"line",
 data:{
 labels,
 datasets:[{
+label:"Projected Wealth",
 data,
 borderColor:"#2bd47d",
-tension:.3
+backgroundColor:"rgba(43,212,125,.15)",
+borderWidth:3,
+fill:true,
+tension:.35,
+pointRadius:3
 }]
+},
+options:{
+plugins:{legend:{display:false}},
+scales:{
+x:{grid:{color:"rgba(255,255,255,.05)"}},
+y:{grid:{color:"rgba(255,255,255,.05)"}}
+}
 }
 })
 
@@ -608,23 +536,18 @@ tension:.3
 function renderTimeline(start,annual,rate){
 
 const wrap=document.getElementById("timeline")
-
 wrap.innerHTML=""
-
-let total=start
 
 for(let y of [5,10,20]){
 
+let total=start
+
 for(let i=1;i<=y;i++){
-
 total=(total+annual)*(1+rate)
-
 }
 
 const el=document.createElement("div")
-
 el.className="timeline-item"
-
 el.innerHTML=`Year ${y}: $${Math.round(total).toLocaleString()}`
 
 wrap.appendChild(el)
@@ -634,7 +557,6 @@ wrap.appendChild(el)
 }
 
 renderDomains()
-renderHabits()
 simulateLife()
 
 document.getElementById("runBtn").addEventListener("click",simulateLife)
